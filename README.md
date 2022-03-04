@@ -584,3 +584,41 @@ Proxy：代理和InvocationHandler：调用处理程序
 * 公共业务发生扩展的时候，方便集中管理
 * 一个动态代理类代理的是一个接口，一般就是代理对应的一类业务
 * 一个动态代理类可以代理多个类，只要是实现了同一个接口即可
+
+
+## 9、AOP
+
+### 9.1、什么是AOP？
+
+在软件业，AOP为Aspect Oriented Programming的缩写，意为：[面向切面编程](https://baike.baidu.com/item/%E9%9D%A2%E5%90%91%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B/6016335)，通过[预编译](https://baike.baidu.com/item/%E9%A2%84%E7%BC%96%E8%AF%91/3191547)方式和运行期间动态代理实现程序功能的统一维护的一种技术。AOP是[OOP](https://baike.baidu.com/item/OOP)的延续，是软件开发中的一个热点，也是[Spring](https://baike.baidu.com/item/Spring)框架中的一个重要内容，是[函数式编程](https://baike.baidu.com/item/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/4035031)的一种衍生范型。利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的[耦合度](https://baike.baidu.com/item/%E8%80%A6%E5%90%88%E5%BA%A6/2603938)降低，提高程序的可重用性，同时提高了开发的效率。 
+
+### 9.2、AOP在Spring中的作用
+
+**提供声明式事务；允许用户自定义切面**
+
+* 横切关注点：跨越应用多个模块的方法或功能。就是我们与业务逻辑无关的，但是需要关注的部分就是横切关注点，如日志，安全，缓存，事务等等等等
+* 切面（Aspect）：横切关注点被模块化的特殊对象。即，它是一个类
+* 通知（Advice）：切面必须完成多个工作。它是类中的一个方法
+* 目标（Target）：被通知对象
+* 代理（Proxy）：向目标对象通知之后创建的对象
+* 切入点（Pointcut）：切面通知执行的“地点”
+* 连接点（Jointcut）：与切入点相匹配的执行点
+
+### 9.3、使用Spring实现AOP
+
+【:star:】使用Spring织入，需要导入一个依赖包
+
+~~~xml
+<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.9.7</version>
+</dependency>
+~~~
+
+方式一：使用Spring的API接口【主要是Spring的api接口实现】
+
+方式二：使用自定义类来实现AOP【主要是切面】
+
+方式三：使用注解实现！
