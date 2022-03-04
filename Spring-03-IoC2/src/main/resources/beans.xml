@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+	id：Bean的唯一标识符，也就是相当于我们学的对象名
+	class:对象所对应的类
+-->
+
+    <bean class="site.whatsblog.pojo.User" id="user">
+        <constructor-arg name="name" value="Suk"/>
+    </bean>
+    <!--别名-->
+    <alias name="user" alias="user2"/>
+</beans>

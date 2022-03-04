@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="student" class="site.whatsblog.pojo.Student" scope="prototype">
+        <property name="name" value="Suk"/>
+        <property name="books">
+            <array>
+                <value>Java</value>
+                <value>Python</value>
+                <value>C</value>
+                <value>C++</value>
+            </array>
+        </property>
+        <property name="hobbies">
+            <list>
+                <value>唱</value>
+                <value>跳</value>
+                <value>rap</value>
+                <value>篮球</value>
+            </list>
+        </property>
+        <property name="address" ref="address"/>
+        <property name="cards">
+            <map>
+                <entry key="id" value="19200135"/>
+                <entry key="name" value="Suk"/>
+                <entry key="isAllowed" value="1"/>
+            </map>
+        </property>
+        <property name="games">
+            <set>
+                <value>Red Alert</value>
+                <value>QQ Speed</value>
+                <value>King Of Glory</value>
+            </set>
+        </property>
+        <property name="wife">
+            <null>null</null>
+        </property>
+        <property name="info">
+            <props>
+                <prop key="addr">你瞎啊</prop>
+                <prop key="name">你瞎啊</prop>
+                <prop key="stuNo">你瞎啊</prop>
+            </props>
+        </property>
+    </bean>
+    <bean class="site.whatsblog.pojo.Address" id="address">
+        <property name="address" value="JiangSu"/>
+    </bean>
+</beans>

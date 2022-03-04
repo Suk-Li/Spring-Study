@@ -1,0 +1,3 @@
+# Project exclude paths
+/Spring-07-ConfigurationWithAnnotation/target/
+/Spring-08-Proxy/target/
