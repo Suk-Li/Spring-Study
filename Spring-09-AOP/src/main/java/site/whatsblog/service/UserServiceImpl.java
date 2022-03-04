@@ -11,10 +11,9 @@ package site.whatsblog.service;
  */
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component("UserService")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Override
     public void add() {
         System.out.println("add...");
