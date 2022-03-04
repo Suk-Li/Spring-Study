@@ -14,6 +14,7 @@
         <module name="Spring-02-HelloSpring" />
         <module name="Spring-01-IoC1" />
         <module name="Spring-04-DI" />
+        <module name="Spring-09-AOP" />
         <module name="Spring-08-Proxy" />
       </profile>
     </annotationProcessing>
