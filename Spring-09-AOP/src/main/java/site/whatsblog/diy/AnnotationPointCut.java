@@ -16,6 +16,7 @@ import org.aspectj.lang.annotation.Before;
  * <p>date : 2022/3/4 17:45</p>
  * <p>site : https://www.whatsblog.site/</p>
  */
+// 声明式事务
 @Aspect // 标注这个类是一个切面
 public class AnnotationPointCut {
     @Before("execution(* site.whatsblog.service.UserServiceImpl.*(..))")

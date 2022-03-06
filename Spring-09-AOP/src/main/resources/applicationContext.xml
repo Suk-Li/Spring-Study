@@ -37,6 +37,7 @@
 
     <!--方式三：注解-->
     <bean class="site.whatsblog.diy.AnnotationPointCut" id="annotationPointCut"/>
-    <aop:aspectj-autoproxy/>
+    <!--开启注解支持 JDK默认（proxy-target-class="false"）cglib(proxy-target-class="true")-->
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
     <context:annotation-config/>
 </beans>

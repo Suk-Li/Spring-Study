@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--DataSource:使用spring的数据源替换MyBatis的配置 c3p0 dbcp druid
+        这里使用spring的jdbc：rg.springframework.jdbc.datasource.DriverManagerDataSource
+    -->
+    <context:property-placeholder location="classpath:/db.properties" />
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--SqlSessionFactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+        <!--绑定MyBatis配置文件-->
+        <property name="configLocation" value="mybatis-config.xml"/>
+        <!--properties里边可以完成所有mybatis配置文件的所有功能-->
+        <property name="mapperLocations" value="classpath*:site/whatsblog/dao/*.xml"/>
+    </bean>
+
+    <!--SqlSessionTemplate就是我们使用的sqlsession-->
+    <bean class="org.mybatis.spring.SqlSessionTemplate" id="template">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+
+    <context:component-scan base-package="site.whatsblog"/>
+    <context:annotation-config/>
+</beans>
