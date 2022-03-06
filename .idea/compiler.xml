@@ -13,6 +13,7 @@
         <module name="Spring-05-Autowired" />
         <module name="Spring-02-HelloSpring" />
         <module name="Spring-01-IoC1" />
+        <module name="Spring-11-Transaction" />
         <module name="Spring-04-DI" />
         <module name="Spring-10-MyBatis" />
         <module name="Spring-09-AOP" />

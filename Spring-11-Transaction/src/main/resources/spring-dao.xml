@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--DataSource:使用spring的数据源替换MyBatis的配置 c3p0 dbcp druid
+        这里使用spring的jdbc：rg.springframework.jdbc.datasource.DriverManagerDataSource
+    -->
+    <context:property-placeholder location="classpath:/db.properties" />
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--SqlSessionFactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <property name="dataSource" ref="dataSource"/>
+        <!--绑定MyBatis配置文件-->
+        <property name="configLocation" value="mybatis-config.xml"/>
+        <!--properties里边可以完成所有mybatis配置文件的所有功能-->
+        <property name="mapperLocations" value="classpath*:site/whatsblog/dao/*.xml"/>
+    </bean>
+
+    <!--SqlSessionTemplate就是我们使用的sqlsession-->
+    <bean class="org.mybatis.spring.SqlSessionTemplate" id="template">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean class="site.whatsblog.dao.UserMapperImpl" id="userMapper">
+        <property name="sqlSessionTemplate" ref="template"/>
+    </bean>
+
+    <context:component-scan base-package="site.whatsblog"/>
+    <context:annotation-config/>
+
+    <!--配置声明式事务-->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="manager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--结合aop实现事务的织入-->
+    <!--配置事务的类-->
+    <!--配置事务的通知-->
+    <tx:advice transaction-manager="manager" id="txAdvice">
+        <!--给哪些方法配置事务-->
+        <!--配置事务的传播特性 propagation-->
+        <tx:attributes>
+            <tx:method name="add" propagation="REQUIRED"/>
+            <tx:method name="delete" propagation="REQUIRED"/>
+            <tx:method name="update" propagation="REQUIRED"/>
+            <tx:method name="find" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置事务的切入-->
+    <aop:config>
+        <!--切入点-->
+        <aop:pointcut id="pointCut" expression="execution(* site.whatsblog.dao.*.*(..))"/>
+        <!--切入-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
+
+    </aop:config>
+</beans>
