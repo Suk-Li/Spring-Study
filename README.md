@@ -622,3 +622,108 @@ Proxy：代理和InvocationHandler：调用处理程序
 方式二：使用自定义类来实现AOP【主要是切面】
 
 方式三：使用注解实现！
+
+
+## 10、整合MyBatis
+
+步骤：
+
+1. 导入相关jar包
+   * Junit
+   * MyBatis
+   * MySQL
+   * Spring
+   * AOP织入
+   * mybatis-spring
+2. 编写配置文件
+3. 测试
+
+### 10.1、回忆MyBatis
+
+1. 编写实体类
+2. 编写核心配置文件
+3. 编写接口
+4. 编写Mapper.xml
+
+### 10.2、MyBatis-Spring
+
+MyBatis-Spring 会帮助你将 MyBatis 代码无缝地整合到 Spring 中。它将允许 MyBatis 参与到 Spring 的事务管理之中，创建映射器 mapper 和 `SqlSession` 并注入到 bean 中，以及将 Mybatis 的异常转换为 Spring 的 `DataAccessException`。 最终，可以做到应用代码不依赖于 MyBatis，Spring 或 MyBatis-Spring。 
+
+> `SqlSessionTemplate` 是 MyBatis-Spring 的核心。作为 `SqlSession` 的一个实现，这意味着可以使用它无缝代替你代码中已经在使用的 `SqlSession`。 `SqlSessionTemplate` 是线程安全的，可以被多个 DAO 或映射器所共享使用。
+>
+> 当调用 SQL 方法时（包括由 `getMapper()` 方法返回的映射器中的方法），`SqlSessionTemplate` 将会保证使用的 `SqlSession` 与当前 Spring 的事务相关。 此外，它管理 session 的生命周期，包含必要的关闭、提交或回滚操作。另外，它也负责将 MyBatis 的异常翻译成 Spring 中的 `DataAccessExceptions`。
+>
+> 由于模板可以参与到 Spring 的事务管理中，并且由于其是线程安全的，可以供多个映射器类使用，你应该**总是**用 `SqlSessionTemplate` 来替换 MyBatis 默认的 `DefaultSqlSession` 实现。在同一应用程序中的不同类之间混杂使用可能会引起数据一致性的问题。
+>
+> 可以使用 `SqlSessionFactory` 作为构造方法的参数来创建 `SqlSessionTemplate` 对象。
+>
+> ```xml
+> <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+>   <constructor-arg index="0" ref="sqlSessionFactory" />
+> </bean>
+> ```
+
+1. 编写数据源配置
+2. SQLSessionFactory
+3. SQLSessionTemplate
+4. 给接口加实现类
+
+## 11、声明式事务
+
+1、回顾事务
+
+* 要么都成功，要么都失败
+* 事务在项目开发中十分重要，涉及数据的一致性问题
+* 确保完整性和一致性
+
+事务的ACID原则
+
+* 原子性：确保要么都成功，要么都失败
+* 一致性：一旦事务完成了，要么都提交，要么都不提交
+* 隔离性：多个事务可能操作同一个资源，保证事务互相隔离，防止数据损坏
+* 持久性：事务一旦完成了，系统无论发生什么问题，数据都不会受到影响，数据被持久化的写到存储器中
+
+2、Spring中的事务管理
+
+* 声明式事务：AOP
+
+  ~~~xml
+  <!--配置声明式事务-->
+  <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="manager">
+      <property name="dataSource" ref="dataSource"/>
+  </bean>
+  <!--结合aop实现事务的织入-->
+  <!--配置事务的类-->
+  <!--配置事务的通知-->
+  <tx:advice transaction-manager="manager" id="txAdvice">
+      <!--给哪些方法配置事务-->
+      <!--配置事务的传播特性 propagation-->
+      <tx:attributes>
+          <tx:method name="add" propagation="REQUIRED"/>
+          <tx:method name="delete" propagation="REQUIRED"/>
+          <tx:method name="update" propagation="REQUIRED"/>
+          <tx:method name="find" read-only="true"/>
+          <tx:method name="*"/>
+      </tx:attributes>
+  </tx:advice>
+  
+  <!--配置事务的切入-->
+  <aop:config>
+      <!--切入点-->
+      <aop:pointcut id="pointCut" expression="execution(* site.whatsblog.dao.*.*(..))"/>
+      <!--切入-->
+      <aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
+  
+  </aop:config>
+  ~~~
+
+* 编程式事务：需要在代码中进行事务的管理
+
+思考：
+
+为什么需要事务？
+
+* 如果不配置事务，可能存在数据提交不一致的情况
+* 如果我们不在Spring中配置声明式事务，我们就需要在代码中手动配置事务！
+* 事务在项目开发中十分重要，涉及数据的一致性和完整性问题，不容马虎！
+
